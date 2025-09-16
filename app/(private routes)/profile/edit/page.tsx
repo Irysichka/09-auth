@@ -1,7 +1,5 @@
 
 "use client";
-
-import Link from "next/link";
 import Image from "next/image";
 import css from "./EditProfilePage.module.css";
 import { useEffect, useState } from "react";
@@ -37,6 +35,12 @@ const EditProfile = () => {
     }
     router.back();
   };
+  const handleClose = () => {
+    router.back();
+  };
+  if (!user) {
+    return <p>Loading...</p>;
+  }
   return (
     <>
       <main className={css.mainContent}>
@@ -69,9 +73,13 @@ const EditProfile = () => {
               <button type="submit" className={css.saveButton}>
                 Save
               </button>
-              <Link href="/profile" className={css.cancelButton}>
-                Cancel
-              </Link>
+              <button
+              onClick={handleClose}
+              type="button"
+              className={css.cancelButton}
+            >
+              Cancel
+            </button>
             </div>
           </form>
         </div>
