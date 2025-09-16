@@ -35,11 +35,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function App({ params }: Props) {
   const queryClient = new QueryClient();
-  const { slug } = await params;
+  const { slug } = params;
     const tag = slug[0] === "All" ? undefined : slug[0];
   await queryClient.prefetchQuery({
     queryKey: ["notes", tag],
-    queryFn: () => fetchNotes(1, 8, "", tag),
+    queryFn: () => fetchNotes(1, "", tag),
   });
 
   return (

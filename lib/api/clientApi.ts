@@ -64,8 +64,8 @@ export const getMe = async () => {
 
 export const fetchNotes = async (
   page: number,
-  search?: string,
-  tag?: string
+  search: string,
+  tag: string | undefined,
 ): Promise<NotesResponse> => {
   const params = {
     ...(search && { search }),
