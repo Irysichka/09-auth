@@ -6,13 +6,13 @@ import {
   useQuery,
   keepPreviousData,
 } from "@tanstack/react-query";
-import { fetchNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api/clientApi";
 import { useRouter } from "next/navigation";
 import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import { useDebounce } from "use-debounce";
-import { NotesResponse } from "@/lib/api";
+import { NotesResponse } from "@/lib/api/clientApi";
 
  
 type NotesClientProps = {
@@ -33,7 +33,7 @@ export default function NotesClient({ tag }: NotesClientProps) {
 
   const { data } = useQuery<NotesResponse>({
     queryKey: ["notes", debouncedQuery, page, tag],
-    queryFn: () => fetchNotes(page, 8, debouncedQuery, tag),
+    queryFn: () => fetchNotes( page, debouncedQuery,tag),
     placeholderData: keepPreviousData,
   });
 

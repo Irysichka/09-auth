@@ -4,7 +4,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import NotesClient from "@/app/(private routes)/notes/filter/[...slug]/Notes.client";
-import { fetchNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api/clientApi";
 import { Metadata } from "next";
 
 type Props = {

@@ -3,7 +3,7 @@ import { nextServer } from "./api";
 import { User } from "@/types/user";
 import { Note } from "@/types/note";
 
-export interface NoteResponse {
+export interface NotesResponse {
   notes: Note[];
   totalPages: number;
 }
@@ -64,16 +64,18 @@ export const getMe = async () => {
 
 export const fetchNotes = async (
   page: number,
-  query: string,
+  search?: string,
   tag?: string
-): Promise<NoteResponse> => {
-  const response = await nextServer.get<NoteResponse>("/notes", {
-    params: {
-      page: page,
-      perPage: 12,
-      search: query,
-      tag: tag,
-    },
+): Promise<NotesResponse> => {
+  const params = {
+    ...(search && { search }),
+    tag,
+    page,
+    perPage: 8,
+  };
+
+  const response = await nextServer.get<NotesResponse>("/notes", {
+    params,
   });
   return response.data;
 };
