@@ -1,6 +1,7 @@
 import Link from "next/link";
 import css from "./Header.module.css";
 import TagsMenu from "@/components/TagsMenu/TagsMenu";
+import AuthNavigation from "../AuthNavigation/AuthNavigation";
 
 export default function AppHeader() {
   return (
@@ -15,6 +16,7 @@ export default function AppHeader() {
               Home
             </Link>
           </li>
+          <AuthNavigation />
           <li>
             <TagsMenu />
           </li>
