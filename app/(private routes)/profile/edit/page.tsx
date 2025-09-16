@@ -1,62 +1,83 @@
 
+"use client";
+
 import Link from "next/link";
-import css from "./ProfilePage.module.css";
 import Image from "next/image";
-import { getServerMe } from "@/lib/api/serverApi";
-import { Metadata } from "next";
+import css from "./EditProfilePage.module.css";
+import { useEffect, useState } from "react";
+import { getMe, updateMe } from "@/lib/api/clientApi";
+import { useRouter } from "next/navigation";
+import { User } from "@/types/user";
+import { useAuthStore } from "@/lib/store/authStore";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const userData = await getServerMe();
-  return {
-    title: `Profile : ${userData.username}`,
-    description: `${userData.username} Notehub user profile`,
-    openGraph: {
-      title: `Profile : ${userData.username}`,
-      description: `${userData.username} Notehub user profile`,
-      url: `https://09-auth-ten-green.vercel.app/`,
-      siteName: "NoteHub",
-      images: [
-        {
-          url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
-          width: 1200,
-          height: 630,
-          alt: `Profile : ${userData.username}`,
-        },
-      ],
-      type: "article",
-    },
+const EditProfile = () => {
+  const router = useRouter();
+  const [user, setEditUser] = useState<User | null>(null);
+  const [userName, setUserName] = useState("");
+  const setUser = useAuthStore((state) => state.setUser);
+
+  useEffect(() => {
+    getMe().then((user) => {
+      setEditUser(user ?? null);
+      setUserName(user?.username ?? "");
+    });
+  }, []);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(event.target.value);
   };
-}
 
-const Profile = async () => {
-  const user = await getServerMe();
+  const handleSaveUser = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const updatedUser = await updateMe({ username: userName });
+
+    if (updatedUser) {
+      setUser(updatedUser);
+      setEditUser(updatedUser);
+    }
+    router.back();
+  };
   return (
     <>
       <main className={css.mainContent}>
         <div className={css.profileCard}>
-          <div className={css.header}>
-            <h1 className={css.formTitle}>Profile Page</h1>
-            <Link href="/profile/edit" className={css.editProfileButton}>
-              Edit Profile
-            </Link>
-          </div>
-          <div className={css.avatarWrapper}>
-            <Image
-              src={user.avatar || ""}
-              alt="User Avatar"
-              width={120}
-              height={120}
-              className={css.avatar}
-            />
-          </div>
-          <div className={css.profileInfo}>
-            <p>Name: {user.username}</p>
-            <p>Email: {user.email}</p>
-          </div>
+          <h1 className={css.formTitle}>Edit Profile</h1>
+          <Image
+            src={user?.avatar || ""}
+            alt="User Avatar"
+            width={120}
+            height={120}
+            className={css.avatar}
+          />
+          <p>Sorry, uploading images under maintanance</p>
+
+          <form className={css.profileInfo} onSubmit={handleSaveUser}>
+            <div className={css.usernameWrapper}>
+              <label htmlFor="username">Username:</label>
+              <input
+                id="username"
+                type="text"
+                className={css.input}
+                value={userName}
+                onChange={handleChange}
+              />
+            </div>
+
+            <p>{`Email: ${user?.email || ""}`}</p>
+
+            <div className={css.actions}>
+              <button type="submit" className={css.saveButton}>
+                Save
+              </button>
+              <Link href="/profile" className={css.cancelButton}>
+                Cancel
+              </Link>
+            </div>
+          </form>
         </div>
       </main>
     </>
   );
 };
 
-export default Profile;
+export default EditProfile;
