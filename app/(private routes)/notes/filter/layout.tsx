@@ -1,4 +1,4 @@
-import css from "@/app/notes/filter/Layoutnotes.module.css";
+import css from "./Layoutnotes.module.css";
 
 type Props = {
   children: React.ReactNode;
